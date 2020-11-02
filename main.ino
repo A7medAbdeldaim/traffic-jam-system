@@ -95,7 +95,7 @@ char jam_char[] = {
   'n',
   'n'
 };
-int jam_a, jam_b, jam_c, jam_d;
+int jam_a, jam_b, jam_c, jam_d, max_jam_val, current_route_val;
 char max_jam, current_route;
 static int counter = 99;
 int jam_ind = 0;
@@ -233,13 +233,14 @@ void sort() {
         tmp_char = jam_char[i];
         jam_char[i] = jam_char[j];
         jam_char[j] = tmp_char;
-        tmp = jam_val[i];
-        jam_val[i] = jam_val[j];
-        jam_val[j] = tmp;
+        tmp = jam_time[i];
+        jam_time[i] = jam_time[j];
+        jam_time[j] = tmp;
       }
     }
   }
   max_jam = jam_char[1];
+  max_jam_val = jam_val[1];
   
   // TODO: Check this Bug
   // Add the current route to the begining of the array
@@ -286,10 +287,12 @@ void display() {
   ** then set counter = 5 if the counter > 5
   */
   
-  if (current_route != max_jam && counter > 5) {
-    counter = 4;
+  current_route_val = jam_val[find('current_route')];
+  
+  if (current_route != max_jam && counter > 15 && max_jam_val != current_route_val) {
+    counter = 14;
     
-  } else if (current_route == max_jam && counter < 3) {
+  } else if ((current_route == max_jam && counter < 3) || (max_jam_val == current_route_val && counter < 3)) {
     /*
     ** if maximum value in jam array == current route and counter < 3
     ** then add 5 to counter
