@@ -83,7 +83,7 @@ int jam_val[] = {
   0,
   0
 };
-int jam_time[] = {
+float jam_time[] = {
   0,
   0,
   0,
@@ -139,7 +139,7 @@ void get_jam() {
     if (ind_null != -1) {                 // Add it
       jam_char[ind_null] = 'a';
       jam_val[ind_null] = jam_a;
-      jam_time[ind_null] = (int) time(NULL);
+      jam_time[ind_null] = (float) clock();
     }
   } else if (jam_a == 0 && ind_a != -1) {   // Route Found but not Jammed
     jam_char[ind_a] = 'n';
@@ -147,7 +147,7 @@ void get_jam() {
     jam_time[ind_a] = 0;
   } else if (ind_a != -1 && jam_val[ind_a] != jam_a) {  // Route Found in Jam_char array but current value is different
     jam_val[ind_a] = jam_a;
-    jam_time[ind_a] = (int) time(NULL);
+    jam_time[ind_a] = (float) clock();
   }
   
   /*
@@ -160,7 +160,7 @@ void get_jam() {
     if (ind_null != -1) { // Add it
       jam_char[ind_null] = 'b';
       jam_val[ind_null] = jam_b;
-      jam_time[ind_null] = (int) time(NULL);
+      jam_time[ind_null] = (float) clock();
     }
   } else if (jam_b == 0 && ind_b != -1) { // Route Found but not Jammed
     jam_char[ind_b] = 'n';
@@ -168,7 +168,7 @@ void get_jam() {
     jam_time[ind_b] = 0;
   } else if (ind_b != -1 && jam_val[ind_b] != jam_b) { // Route Found in Jam_char array but current value is different
     jam_val[ind_b] = jam_b;
-    jam_time[ind_b] = (int) time(NULL);
+    jam_time[ind_b] = (float) clock();
   }
   
   /*
@@ -182,7 +182,7 @@ void get_jam() {
     if (ind_null != -1) { // Add it
       jam_char[ind_null] = 'c';
       jam_val[ind_null] = jam_c;
-      jam_time[ind_null] = (int) time(NULL);
+      jam_time[ind_null] = (float) clock();
     }
   } else if (jam_c == 0 && ind_c != -1) { // Route Found but not Jammed
     jam_char[ind_c] = 'n';
@@ -190,7 +190,7 @@ void get_jam() {
     jam_time[ind_c] = 0;
   } else if (ind_c != -1 && jam_val[ind_c] != jam_c) { // Route Found in Jam_char array but current value is different
     jam_val[ind_c] = jam_c;
-    jam_time[ind_c] = (int) time(NULL);
+    jam_time[ind_c] = (float) clock();
   }
   
   /*
@@ -204,7 +204,7 @@ void get_jam() {
     if (ind_null != -1) { // Add it
       jam_char[ind_null] = 'd';
       jam_val[ind_null] = jam_d;
-      jam_time[ind_null] = (int) time(NULL);
+      jam_time[ind_null] = (float) clock();
     }
   } else if (jam_d == 0 && ind_d != -1) { // Route Found but not Jammed
     jam_char[ind_d] = 'n';
@@ -212,7 +212,7 @@ void get_jam() {
     jam_time[ind_d] = 0;
   } else if (ind_d != -1 && jam_val[ind_d] != jam_d) { // Route Found in Jam_char array but current value is different
     jam_val[ind_d] = jam_d;
-    jam_time[ind_d] = (int) time(NULL);
+    jam_time[ind_d] = (float) clock();
   }
 }
 void sort() {
@@ -243,7 +243,7 @@ void sort() {
   // Sort By Time
   for (i = 0; i < SIZE; i++) {
     for (j = i + 1; j < SIZE; j++) {
-      if (jam_val[i] == jam_val[j] && jam_time[i] < jam_time[j]) {
+      if (jam_val[i] == jam_val[j] && jam_time[i] > jam_time[j]) {
         tmp = jam_val[i];
         jam_val[i] = jam_val[j];
         jam_val[j] = tmp;
@@ -308,7 +308,7 @@ void display() {
   if (current_route != max_jam && jam_val[0] == 0 && counter > 1) {
     counter = 1;
     
-  } else if (current_route == max_jam && counter <= 1) {
+  } else if (current_route == max_jam && counter <= 1 && false) {
     /*
     ** if maximum value in jam array == current route and counter < 3
     ** then add 5 to counter
@@ -402,14 +402,14 @@ void change_route(char route) {
 
 
   case 'n':
-    digitalWrite(LEDGa, HIGH);
-    digitalWrite(LEDRa, LOW);
-    digitalWrite(LEDGb, HIGH);
-    digitalWrite(LEDRb, LOW);
-    digitalWrite(LEDGc, HIGH);
-    digitalWrite(LEDRc, LOW);
-    digitalWrite(LEDGd, HIGH);
-    digitalWrite(LEDRd, LOW);
+    digitalWrite(LEDGa, LOW);
+    digitalWrite(LEDRa, HIGH);
+    digitalWrite(LEDGb, LOW);
+    digitalWrite(LEDRb, HIGH);
+    digitalWrite(LEDGc, LOW);
+    digitalWrite(LEDRc, HIGH);
+    digitalWrite(LEDGd, LOW);
+    digitalWrite(LEDRd, HIGH);
     break;
   }
 }
