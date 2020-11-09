@@ -97,7 +97,7 @@ char jam_char[] = {
 };
 int jam_a, jam_b, jam_c, jam_d;
 char max_jam, current_route;
-static int counter = 99;
+static int counter = 20;
 int jam_ind = 0;
 bool start = false;
 void loop() {
@@ -257,7 +257,7 @@ void sort() {
     }
   }
   
-  max_jam = jam_char[1];
+  max_jam = jam_char[0];
   
   // TODO: Check this Bug
   // Add the current route to the begining of the array
