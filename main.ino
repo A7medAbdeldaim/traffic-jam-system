@@ -6,7 +6,7 @@ SevSeg sevseg;
 int LEDRa = 33;
 int LEDGa = 32;
 int LEDRb = 23;
-int LEDGb = 22;
+int LEDGb = 22;   
 int LEDRc = 50;
 int LEDGc = 51;
 int LEDRd = 42;
@@ -83,7 +83,7 @@ int jam_val[] = {
   0,
   0
 };
-float jam_time[] = {
+int jam_time[] = {
   0,
   0,
   0,
@@ -95,6 +95,15 @@ char jam_char[] = {
   'n',
   'n'
 };
+
+char escape[] = {
+  'n',
+  'n',
+  'n',
+  'n'
+}
+
+static int order_time = 0;
 int jam_a, jam_b, jam_c, jam_d;
 char max_jam, current_route;
 static int counter = 20;
@@ -123,6 +132,41 @@ void loop() {
   display();
 }
 void get_jam() {
+  int total_jam = jam_a + jam_b + jam_c + jam_d;
+  int escape_jam = 0;
+
+  for (i = 0; i < SIZE; i++) {
+    if (escape[i] == 'a') {
+      escape_jam = escape_jam + jam_a;
+    } else if (escape[i] == 'b') {
+      escape_jam = escape_jam + jam_b;
+    } else if (escape[i] == 'c') {
+      escape_jam = escape_jam + jam_c;
+    } else if (escape[i] == 'd') {
+      escape_jam = escape_jam + jam_d;
+    }
+  }
+
+  if (total_jam > escape_jam) {
+
+    for (i = 0; i < SIZE; i++) {
+      if (escape[i] == 'a') {
+        jam_a = 0;
+      } else if (escape[i] == 'b') {
+        jam_b = 0;
+      } else if (escape[i] == 'c') {
+        jam_c = 0;
+      } else if (escape[i] == 'd') {
+        jam_d = 0;
+      }
+    }
+  } else {
+    escape_jam[0] = 'n';
+    escape_jam[1] = 'n';
+    escape_jam[2] = 'n';
+    escape_jam[3] = 'n';
+  }
+  
   /*
   ** if route in jam_dict and value = current value then escape
   ** if route not in jam_dict the add it and add value and add time
@@ -139,15 +183,15 @@ void get_jam() {
     if (ind_null != -1) {                 // Add it
       jam_char[ind_null] = 'a';
       jam_val[ind_null] = jam_a;
-      jam_time[ind_null] = (float) clock();
+      jam_time[ind_null] = ++order_time;
     }
   } else if (jam_a == 0 && ind_a != -1) {   // Route Found but not Jammed
     jam_char[ind_a] = 'n';
     jam_val[ind_a] = 0;
-    jam_time[ind_a] = 0;
+    jam_time[ind_a] = 9999;
   } else if (ind_a != -1 && jam_val[ind_a] != jam_a) {  // Route Found in Jam_char array but current value is different
     jam_val[ind_a] = jam_a;
-    jam_time[ind_a] = (float) clock();
+    jam_time[ind_a] = ++order_time;
   }
   
   /*
@@ -160,15 +204,15 @@ void get_jam() {
     if (ind_null != -1) { // Add it
       jam_char[ind_null] = 'b';
       jam_val[ind_null] = jam_b;
-      jam_time[ind_null] = (float) clock();
+      jam_time[ind_null] = ++order_time;
     }
   } else if (jam_b == 0 && ind_b != -1) { // Route Found but not Jammed
     jam_char[ind_b] = 'n';
     jam_val[ind_b] = 0;
-    jam_time[ind_b] = 0;
+    jam_time[ind_b] = 9999;
   } else if (ind_b != -1 && jam_val[ind_b] != jam_b) { // Route Found in Jam_char array but current value is different
     jam_val[ind_b] = jam_b;
-    jam_time[ind_b] = (float) clock();
+    jam_time[ind_b] = ++order_time;
   }
   
   /*
@@ -182,15 +226,15 @@ void get_jam() {
     if (ind_null != -1) { // Add it
       jam_char[ind_null] = 'c';
       jam_val[ind_null] = jam_c;
-      jam_time[ind_null] = (float) clock();
+      jam_time[ind_null] = ++order_time;
     }
   } else if (jam_c == 0 && ind_c != -1) { // Route Found but not Jammed
     jam_char[ind_c] = 'n';
     jam_val[ind_c] = 0;
-    jam_time[ind_c] = 0;
+    jam_time[ind_c] = 9999;
   } else if (ind_c != -1 && jam_val[ind_c] != jam_c) { // Route Found in Jam_char array but current value is different
     jam_val[ind_c] = jam_c;
-    jam_time[ind_c] = (float) clock();
+    jam_time[ind_c] = ++order_time;
   }
   
   /*
@@ -204,15 +248,15 @@ void get_jam() {
     if (ind_null != -1) { // Add it
       jam_char[ind_null] = 'd';
       jam_val[ind_null] = jam_d;
-      jam_time[ind_null] = (float) clock();
+      jam_time[ind_null] = ++order_time;
     }
   } else if (jam_d == 0 && ind_d != -1) { // Route Found but not Jammed
     jam_char[ind_d] = 'n';
     jam_val[ind_d] = 0;
-    jam_time[ind_d] = 0;
+    jam_time[ind_d] = 9999;
   } else if (ind_d != -1 && jam_val[ind_d] != jam_d) { // Route Found in Jam_char array but current value is different
     jam_val[ind_d] = jam_d;
-    jam_time[ind_d] = (float) clock();
+    jam_time[ind_d] = ++order_time;
   }
 }
 void sort() {
@@ -220,7 +264,7 @@ void sort() {
   ** sort by the maximum value
   ** then sort by time if only equal values
   ** then add current route to the begining
-  */
+  */ 
   
   int i, j, tmp;
   char tmp_char;
@@ -256,28 +300,14 @@ void sort() {
       }
     }
   }
+
+  if (counter < 2 && current_route == jam_char[0]) {
+    jam_time[0] = 9999;
+    jam_val[0] = 0;
+    jam_char[0] = 'n';
+  }
   
   max_jam = jam_char[0];
-  
-  // TODO: Check this Bug
-  // Add the current route to the begining of the array
-  //  int ind = find(current_route);
-  //  if (ind != -1 && ind != 0) {
-  //    int temp_val = jam_val[ind];
-  //    int temp_time = jam_time[ind];
-  //    char temp_char = jam_char[ind];
-  //    for (int k = ind; k > 0; k--) {
-  //      jam_val[k] = jam_val[k - 1];
-  //      jam_char[k] = jam_char[k - 1];
-  //      jam_time[k] = jam_time[k - 1];
-  //    }
-  //    jam_val[0] = temp_val;
-  //    jam_char[0] = temp_char;
-  //    jam_time[0] = temp_time;
-  //  }
-  // add the current route to the beigning of the array
-  // then add the maximum value
-  // if 2 elements or more are equal then sort by time
 }
 
 
@@ -308,18 +338,19 @@ void display() {
   if (current_route != max_jam && jam_val[0] == 0 && counter > 1) {
     counter = 1;
     
-  } else if (current_route == max_jam && counter <= 1 && false) {
+  } //else if (current_route == max_jam && counter <= 1) {
     /*
     ** if maximum value in jam array == current route and counter < 3
     ** then add 5 to counter
     */
 
-    if (jam_val[0] == 1) {
-      counter = 16;  
-    } else if (jam_val[0] == 2) {
-      counter = 21;
-    }
-  } else {
+    //if (jam_val[0] == 1) {
+      //counter = 16;  
+    //} else if (jam_val[0] == 2) {
+//      counter = 21;
+  //  }
+  //}
+  else {
     /*
     ** if counter == 0 then
     ** set current_route == next_route [always = 1]
@@ -329,17 +360,34 @@ void display() {
     
     if (counter <= 0 || (current_route != max_jam && jam_val[0] == 0)) {
       
-      current_route = jam_char[1];
-      if (jam_val[1] == 1) {
-        counter = 16;  
-      } else if (jam_val[1] == 2) {
-        counter = 21;
+      if (current_route == jam_char[0] && jam_val[1] != 0) {
+        jam_time[0] = 9999;
+        jam_val[0] = 0;
+        jam_char[0] = 'n';
+
+        int ind_null = find_escape('n');
+        if (ind_null == 0) {
+          escape[0] = current_route
+        } else {
+          escape[ind_null] = current_route
+        }
+        
+        current_route = jam_char[1];
+        if (jam_val[1] == 1) {
+          counter = 16;  
+        } else if (jam_val[1] == 2) {
+          counter = 21;
+        }
+        
       } else {
-        counter = 100;
+        current_route = jam_char[0];
+        if (jam_val[0] == 1) {
+          counter = 16;  
+        } else if (jam_val[0] == 2) {
+          counter = 21;
+        }
       }
       
-      Serial.print(current_route);
-      Serial.print('\n');
       change_route(current_route);
     }
     counter--;
@@ -350,6 +398,15 @@ void display() {
 int find(char ele) {
   for (int i = 0; i < SIZE; i++) {
     if (jam_char[i] == ele) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+int find_escape(char ele) {
+  for (int i = 0; i < SIZE; i++) {
+    if (escape[i] == ele) {
       return i;
     }
   }
