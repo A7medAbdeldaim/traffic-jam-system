@@ -101,7 +101,7 @@ char escape[] = {
   'n',
   'n',
   'n'
-}
+};
 
 static int order_time = 0;
 int jam_a, jam_b, jam_c, jam_d;
@@ -135,7 +135,7 @@ void get_jam() {
   int total_jam = jam_a + jam_b + jam_c + jam_d;
   int escape_jam = 0;
 
-  for (i = 0; i < SIZE; i++) {
+  for (int i = 0; i < SIZE; i++) {
     if (escape[i] == 'a') {
       escape_jam = escape_jam + jam_a;
     } else if (escape[i] == 'b') {
@@ -149,7 +149,7 @@ void get_jam() {
 
   if (total_jam > escape_jam) {
 
-    for (i = 0; i < SIZE; i++) {
+    for (int i = 0; i < SIZE; i++) {
       if (escape[i] == 'a') {
         jam_a = 0;
       } else if (escape[i] == 'b') {
